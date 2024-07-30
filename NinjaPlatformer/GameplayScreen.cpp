@@ -1,10 +1,14 @@
 #include "GameplayScreen.h"
 #include <iostream>
+#include <fstream>
 #include <SDL\SDL_events.h>
 #include <JCEngine/IMainGame.h>
 #include<JCEngine/ResourceManager.h>
+#include <JCEngine/GameErrors.h>
 #include <NinjaPlatformer\Box.h>
 #include <random>
+
+const float TILE_WIDTH = 2.0f;
 
 GameplayScreen::GameplayScreen(JCEngine::Window* window) {
 	m_window = window;
@@ -55,15 +59,62 @@ void GameplayScreen::onEntry()
 	JCEngine::GLTexture boxTexture = JCEngine::ResourceManager::getTexture("Assets/bricks_top.png");
 
 	std::mt19937 randGenerator;
-	std::uniform_real_distribution<float> xDist(-10.0f, 10.0f);
+	/*std::uniform_real_distribution<float> xDist(-10.0f, 10.0f);
 	std::uniform_real_distribution<float> yDist(-15.0f, 15.0f);
-	std::uniform_real_distribution<float> size(0.5f, 2.5f);
+	std::uniform_real_distribution<float> size(0.5f, 2.5f);*/
 	std::uniform_int_distribution<int> colorValue(0, 255);
 
-	const int numBoxes = 10;
+	/*const int numBoxes = 10;
 	for (int i = 0; i < numBoxes; i++) {
 		JCEngine::ColorRGBA8 randColor(colorValue(randGenerator), colorValue(randGenerator), colorValue(randGenerator), 255);
 		m_boxes.emplace_back(game_world, glm::vec2(xDist(randGenerator), yDist(randGenerator)), glm::vec2(size(randGenerator)), boxTexture, randColor);
+	}*/
+
+	std::ifstream file;
+
+	file.open("Levels/level1.txt");
+	if (file.fail()) {
+		JCEngine::fatalError("Failed to load level from level1.txt");
+	}
+
+	std::string temp;
+	file >> temp;
+
+	std::string firstLine;
+	std::getline(file, firstLine);
+
+	std::vector<std::string> _levelData;
+
+	glm::vec4 uvRect(0.0f, 0.0f, 1.0f, 1.0f);
+	JCEngine::ColorRGBA8 tileColor{ 255, 255, 255, 255 };
+
+	for (int y = 0; y < _levelData.size(); y++) {
+		for (int x = 0; x < _levelData[y].size(); x++) {
+			glm::vec4 positionRect(x * TILE_WIDTH, y * TILE_WIDTH, TILE_WIDTH, TILE_WIDTH);
+
+			JCEngine::ColorRGBA8 randColor(colorValue(randGenerator), colorValue(randGenerator), colorValue(randGenerator), 255);
+
+			switch (_levelData[y][x]) {
+			case 'B':
+			case 'R':
+			case 'G':
+			case 'L':
+			case 'Z':
+				m_boxes.emplace_back(game_world, glm::vec2(x * TILE_WIDTH, y * TILE_WIDTH), glm::vec2(TILE_WIDTH), boxTexture, randColor);
+				_levelData[y][x] = '.';
+				break;
+			case '@':
+				/*_startPlayerPosition.x = x * TILE_WIDTH;
+				_startPlayerPosition.y = y * TILE_WIDTH;
+				_levelData[y][x] = '.';*/
+				break;
+			case '.':
+				break;
+			default:
+				std::printf("unexpected symbol tile %c at (%d,%d)", _levelData[y][x], x, y);
+				break;
+			}
+		}
 	}
 
 	m_spriteBatch.init();
@@ -81,7 +132,7 @@ void GameplayScreen::onEntry()
 	m_camera.Init(m_window->GetScreenWidth(), m_window->GetScreenHeight());
 	m_camera.SetScale(32.0f);
 
-	m_player = Player(game_world, glm::vec2(0.0f, 30.0f), glm::vec2(0.8f, 1.8f), glm::vec2(2.0f), JCEngine::ColorRGBA8(255, 255, 255, 255));
+	m_player = Player(game_world, glm::vec2(0.0f, 30.0f), glm::vec2(0.8f, 1.8f), glm::vec2(2.0f), JCEngine::ColorRGBA8(255, 255, 255, 255), &m_camera);
 }
 
 void GameplayScreen::onExit()

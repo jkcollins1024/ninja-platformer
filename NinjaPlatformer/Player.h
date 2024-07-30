@@ -8,6 +8,7 @@
 
 #include "Capsule.h"
 #include <JCEngine\TileSheet.h>
+#include <JCEngine/Camera2D.h>
 
 enum class PlayerMoveState { STANDING, RUNNING, PUNCHING, IN_AIR };
 
@@ -15,7 +16,7 @@ class Player
 {
 public:
 	Player() {}
-	Player(b2World* world, const glm::vec2& position, const glm::vec2& collisionDimensions, const glm::vec2& drawDimensions, JCEngine::ColorRGBA8 color);
+	Player(b2World* world, const glm::vec2& position, const glm::vec2& collisionDimensions, const glm::vec2& drawDimensions, JCEngine::ColorRGBA8 color, JCEngine::Camera2D* camera);
 	~Player();
 
 	void draw(JCEngine::SpriteBatch& spriteBatch);
@@ -34,5 +35,6 @@ private:
 	int m_direction = 1;
 	float m_animTime = 0.0f;
 	PlayerMoveState m_moveState = PlayerMoveState::STANDING;
+	JCEngine::Camera2D* m_camera;
 };
 

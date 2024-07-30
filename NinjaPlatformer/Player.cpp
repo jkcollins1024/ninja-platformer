@@ -4,7 +4,7 @@
 #include <SDL\SDL.h>
 
 
-Player::Player(b2World* world, const glm::vec2& position, const glm::vec2& collisionDimensions, const glm::vec2& drawDimensions, JCEngine::ColorRGBA8 color)
+Player::Player(b2World* world, const glm::vec2& position, const glm::vec2& collisionDimensions, const glm::vec2& drawDimensions, JCEngine::ColorRGBA8 color, JCEngine::Camera2D* camera)
 {
 	//load texture
 	//JCEngine::GLTexture playerTexture = JCEngine::ResourceManager::getTexture("Assets/blue_ninja.png");
@@ -15,6 +15,7 @@ Player::Player(b2World* world, const glm::vec2& position, const glm::vec2& colli
 	m_color = color;
 	m_drawDimensions = drawDimensions;
 	m_textureSheet.init(texture, glm::ivec2(10, 2));
+	m_camera = camera;
 }
 
 Player::~Player()
@@ -27,7 +28,7 @@ void Player::draw(JCEngine::SpriteBatch& spriteBatch)
 
 	b2Body* playerBody = m_collisionCapsule.getBody();
 	glm::vec4 destRect(playerBody->GetPosition().x - m_drawDimensions.x / 2.0f,
-						playerBody->GetPosition().y - m_collisionCapsule.getDimensions() .y / 2.0f,
+						playerBody->GetPosition().y - m_collisionCapsule.getDimensions().y / 2.0f,
 						m_drawDimensions);
 
 	glm::vec2 velocity = glm::vec2(playerBody->GetLinearVelocity().x, playerBody->GetLinearVelocity().y);

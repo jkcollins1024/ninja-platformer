@@ -5,7 +5,7 @@ Box::Box(b2World* world, const glm::vec2& position, const glm::vec2& dimensions,
 		bool fixedRotation, glm::vec4 uvRect) {
 
 	b2BodyDef bodyDef;
-	bodyDef.type = b2_dynamicBody;
+	bodyDef.type = b2_staticBody;
 	bodyDef.fixedRotation = fixedRotation;
 	bodyDef.position.Set(position.x, position.y);
 	m_body = world->CreateBody(&bodyDef);
@@ -15,7 +15,7 @@ Box::Box(b2World* world, const glm::vec2& position, const glm::vec2& dimensions,
 
 	b2FixtureDef fixtureDef;
 	fixtureDef.shape = &boxShape;
-	fixtureDef.density = 1.0f;
+	fixtureDef.density = 0.0f;
 	fixtureDef.friction = 0.3f;
 
 	m_fixture = m_body->CreateFixture(&fixtureDef);
