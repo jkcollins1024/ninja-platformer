@@ -72,7 +72,7 @@ void GameplayScreen::onEntry()
 
 	std::ifstream file;
 
-	file.open("Levels/level1.txt");
+	file.open("Levels/level3.txt");
 	if (file.fail()) {
 		JCEngine::fatalError("Failed to load level from level1.txt");
 	}
@@ -85,6 +85,10 @@ void GameplayScreen::onEntry()
 
 	std::vector<std::string> _levelData;
 
+	while (std::getline(file, temp)) {
+		_levelData.push_back(temp);
+	}
+
 	glm::vec4 uvRect(0.0f, 0.0f, 1.0f, 1.0f);
 	JCEngine::ColorRGBA8 tileColor{ 255, 255, 255, 255 };
 
@@ -96,12 +100,25 @@ void GameplayScreen::onEntry()
 
 			switch (_levelData[y][x]) {
 			case 'B':
+				m_boxes.emplace_back(game_world, glm::vec2(x * TILE_WIDTH, y * TILE_WIDTH), glm::vec2(TILE_WIDTH), JCEngine::ResourceManager::getTexture("Assets/boxAlt.png"), tileColor);
+				break;
 			case 'R':
+				m_boxes.emplace_back(game_world, glm::vec2(x * TILE_WIDTH, y * TILE_WIDTH), glm::vec2(TILE_WIDTH), JCEngine::ResourceManager::getTexture("Assets/grassHillRight.png"), tileColor);
+				break;
+			case 'T':
+				m_boxes.emplace_back(game_world, glm::vec2(x * TILE_WIDTH, y * TILE_WIDTH), glm::vec2(TILE_WIDTH), JCEngine::ResourceManager::getTexture("Assets/grassHillRight2.png"), tileColor);
+				break;
 			case 'G':
+				m_boxes.emplace_back(game_world, glm::vec2(x * TILE_WIDTH, y * TILE_WIDTH), glm::vec2(TILE_WIDTH), JCEngine::ResourceManager::getTexture("Assets/grassMid.png"), tileColor);
+				break;
 			case 'L':
-			case 'Z':
-				m_boxes.emplace_back(game_world, glm::vec2(x * TILE_WIDTH, y * TILE_WIDTH), glm::vec2(TILE_WIDTH), boxTexture, randColor);
-				_levelData[y][x] = '.';
+				m_boxes.emplace_back(game_world, glm::vec2(x * TILE_WIDTH, y * TILE_WIDTH), glm::vec2(TILE_WIDTH), JCEngine::ResourceManager::getTexture("Assets/grassHillLeft.png"), tileColor);
+				break;
+			case 'K':
+				m_boxes.emplace_back(game_world, glm::vec2(x * TILE_WIDTH, y * TILE_WIDTH), glm::vec2(TILE_WIDTH), JCEngine::ResourceManager::getTexture("Assets/grassHillLeft2.png"), tileColor);
+				break;
+			case 'C':
+				m_boxes.emplace_back(game_world, glm::vec2(x * TILE_WIDTH, y * TILE_WIDTH), glm::vec2(TILE_WIDTH), JCEngine::ResourceManager::getTexture("Assets/grassCenter.png"), tileColor);
 				break;
 			case '@':
 				/*_startPlayerPosition.x = x * TILE_WIDTH;

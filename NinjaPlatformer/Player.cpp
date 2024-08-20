@@ -16,6 +16,9 @@ Player::Player(b2World* world, const glm::vec2& position, const glm::vec2& colli
 	m_drawDimensions = drawDimensions;
 	m_textureSheet.init(texture, glm::ivec2(10, 2));
 	m_camera = camera;
+
+	b2Body* playerBody = m_collisionCapsule.getBody();
+	m_camera->SetPosition(glm::vec2(playerBody->GetPosition().x, playerBody->GetPosition().y));
 }
 
 Player::~Player()
@@ -163,5 +166,7 @@ void Player::update(JCEngine::InputManager& inputManager)
 			}
 		}
 	}
+
+	m_camera->SetPosition(glm::vec2(playerBody->GetPosition().x, playerBody->GetPosition().y));
 	
 }
