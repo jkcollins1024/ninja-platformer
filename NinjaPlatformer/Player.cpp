@@ -121,7 +121,7 @@ void Player::drawDebug(JCEngine::DebugRenderer& renderer)
 	m_collisionCapsule.drawDebug(renderer);
 }
 
-bool Player::update(JCEngine::InputManager& inputManager)
+bool Player::update(JCEngine::InputManager& inputManager, std::vector<Projectile*>& bullets, float deltaTime)
 {
 	m_onGround = false;
 
@@ -150,8 +150,15 @@ bool Player::update(JCEngine::InputManager& inputManager)
 		playerBody->SetLinearVelocity(b2Vec2(0.0f, playerBody->GetLinearVelocity().y));
 	}
 	
-	if (inputManager.isKeyPressed(SDL_BUTTON_LEFT))
+	m_frameCount += 1.0f * deltaTime;
+	if (inputManager.isKeyPressed(SDL_BUTTON_LEFT) && m_frameCount >= m_fireRate) {
 		m_punching = true;
+		//throw projectile
+	
+		b2Vec2 playerPosition = playerBody->GetPosition();
+		fire(m_direction == 1 ? glm::vec2(1.0f, 0.0f) : glm::vec2(-1.0f, 0.0f), glm::vec2(playerPosition.x, playerPosition.y), bullets);
+		m_frameCount = 0;
+	}
 
 	/*float MAX_SPEED = 7.0f;
 	if (playerBody->GetLinearVelocity().x < -MAX_SPEED) {
@@ -198,4 +205,11 @@ bool Player::update(JCEngine::InputManager& inputManager)
 	m_camera->SetPosition(glm::vec2(playerBody->GetPosition().x, playerBody->GetPosition().y));
 
 	return false;
+}
+
+void Player::fire(const glm::vec2& direction, const glm::vec2& position, std::vector<Projectile*>& projectiles) {
+	Projectile* energyBall = new Projectile(15.0f, direction, position, 150, JCEngine::ResourceManager::getTexture("Assets/energyball.png").id, 1);
+
+	projectiles.push_back(energyBall);
+	//_fireEffect.play();
 }

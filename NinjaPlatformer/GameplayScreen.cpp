@@ -77,23 +77,23 @@ void GameplayScreen::onEntry()
 	std::string firstLine;
 	std::getline(file, firstLine);
 
-	std::vector<std::string> _levelData;
+	//std::vector<std::string> _levelData;
 
 	while (std::getline(file, temp)) {
-		_levelData.push_back(temp);
+		m_levelData.push_back(temp);
 	}
 
 	glm::vec4 uvRect(0.0f, 0.0f, 1.0f, 1.0f);
 	JCEngine::ColorRGBA8 tileColor{ 255, 255, 255, 255 };
 	glm::vec2 startPlayerPosition;
 
-	for (int y = 0; y < _levelData.size(); y++) {
-		for (int x = 0; x < _levelData[y].size(); x++) {
+	for (int y = 0; y < m_levelData.size(); y++) {
+		for (int x = 0; x < m_levelData[y].size(); x++) {
 			glm::vec4 positionRect(x * TILE_WIDTH, y * TILE_WIDTH, TILE_WIDTH, TILE_WIDTH);
 
 			JCEngine::ColorRGBA8 randColor(colorValue(randGenerator), colorValue(randGenerator), colorValue(randGenerator), 255);
 
-			switch (_levelData[y][x]) {
+			switch (m_levelData[y][x]) {
 			case 'B':
 				m_boxes.emplace_back(game_world, glm::vec2(x * TILE_WIDTH, y * TILE_WIDTH), glm::vec2(TILE_WIDTH), JCEngine::ResourceManager::getTexture("Assets/boxAlt.png"), tileColor, TileType::GROUND);
 				break;
@@ -139,7 +139,7 @@ void GameplayScreen::onEntry()
 			case '.':
 				break;
 			default:
-				std::printf("unexpected symbol tile %c at (%d,%d)", _levelData[y][x], x, y);
+				std::printf("unexpected symbol tile %c at (%d,%d)", m_levelData[y][x], x, y);
 				break;
 			}
 		}
@@ -172,7 +172,7 @@ void GameplayScreen::update()
 {
 	m_camera.Update();
 	checkInput();
-	if (m_player.update(m_game->inputManager)) {
+	if (m_player.update(m_game->inputManager, m_projectiles, 1.0f / 60.0f)) {
 		JCEngine::fatalError("");//dead
 	}
 	//update physics simulation
@@ -200,6 +200,10 @@ void GameplayScreen::draw()
 
 	for (auto& box : m_boxes) {
 		box.draw(m_spriteBatch);
+	}
+
+	for (int i = 0; i < m_projectiles.size(); i++) {
+		m_projectiles[i]->draw(m_spriteBatch);
 	}
 
 	m_player.draw(m_spriteBatch);

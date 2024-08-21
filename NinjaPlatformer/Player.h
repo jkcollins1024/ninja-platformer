@@ -7,8 +7,11 @@
 #include <JCEngine\DebugRenderer.h>
 
 #include "Capsule.h"
+#include "Projectile.h"
 #include <JCEngine\TileSheet.h>
 #include <JCEngine/Camera2D.h>
+
+class Projectile;
 
 enum class PlayerMoveState { STANDING, RUNNING, PUNCHING, IN_AIR };
 
@@ -21,7 +24,8 @@ public:
 
 	void draw(JCEngine::SpriteBatch& spriteBatch);
 	void drawDebug(JCEngine::DebugRenderer& renderer);
-	bool update(JCEngine::InputManager& inputManager);
+	bool update(JCEngine::InputManager& inputManager, std::vector<Projectile*>& bullets, float deltaTime);
+	void fire(const glm::vec2& direction, const glm::vec2& position, std::vector<Projectile*>& bullets);
 
 	const Capsule& getCapsule() const { return m_collisionCapsule; }
 private:
@@ -36,5 +40,7 @@ private:
 	float m_animTime = 0.0f;
 	PlayerMoveState m_moveState = PlayerMoveState::STANDING;
 	JCEngine::Camera2D* m_camera;
+	int m_fireRate = 10.0f;
+	int m_frameCount;
 };
 

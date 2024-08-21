@@ -41,6 +41,8 @@ private:
 	std::vector<Box> m_boxes;
 	Player m_player;
 	bool m_renderDebug = true;
+	std::vector<std::string> m_levelData;
+	std::vector<Projectile*> m_projectiles;
 
 	JCEngine::GLSLProgram m_textureProgram;
 	JCEngine::Camera2D m_camera;
