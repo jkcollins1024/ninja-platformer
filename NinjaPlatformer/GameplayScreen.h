@@ -40,7 +40,7 @@ private:
 	b2World* game_world;
 	std::vector<Box> m_boxes;
 	Player m_player;
-	bool m_renderDebug = false;
+	bool m_renderDebug = true;
 
 	JCEngine::GLSLProgram m_textureProgram;
 	JCEngine::Camera2D m_camera;

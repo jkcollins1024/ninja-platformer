@@ -1,4 +1,5 @@
 #include "Player.h"
+#include "Box.h"
 
 #include <JCEngine/ResourceManager.h>
 #include <SDL\SDL.h>
@@ -65,9 +66,15 @@ void Player::draw(JCEngine::SpriteBatch& spriteBatch)
 	}
 	else {
 		if (m_punching) {
-			tileIndex = 18;
+			/*tileIndex = 18;
 			numTiles = 1;
 			animationSpeed *= 0.25f;
+			if (m_moveState != PlayerMoveState::PUNCHING) {
+				m_animTime = 0.0f;
+				m_moveState = PlayerMoveState::PUNCHING;
+			}*/
+			tileIndex = 1;
+			numTiles = 4;
 			if (m_moveState != PlayerMoveState::PUNCHING) {
 				m_animTime = 0.0f;
 				m_moveState = PlayerMoveState::PUNCHING;
@@ -114,33 +121,45 @@ void Player::drawDebug(JCEngine::DebugRenderer& renderer)
 	m_collisionCapsule.drawDebug(renderer);
 }
 
-void Player::update(JCEngine::InputManager& inputManager)
+bool Player::update(JCEngine::InputManager& inputManager)
 {
 	m_onGround = false;
 
 	b2Body* playerBody = m_collisionCapsule.getBody();
 	if (inputManager.isKeyDown(SDLK_a)) {
-		playerBody->ApplyForceToCenter(b2Vec2(-20.0f, 0.0f), true);
+		/*if (m_direction == 1) {
+			playerBody->SetLinearVelocity(b2Vec2(-7.0f, playerBody->GetLinearVelocity().y));
+		}
+		else {
+			playerBody->ApplyForceToCenter(b2Vec2(-20.0f, 0.0f), true);
+		}*/
+		playerBody->SetLinearVelocity(b2Vec2(-7.0f, playerBody->GetLinearVelocity().y));
 		m_direction = -1;
 	}
 	else if (inputManager.isKeyDown(SDLK_d)) {
-		playerBody->ApplyForceToCenter(b2Vec2(20.0f, 0.0f), true);
+		/*if (m_direction == -1) {
+			playerBody->SetLinearVelocity(b2Vec2(7.0f, playerBody->GetLinearVelocity().y));
+		}
+		else {
+			playerBody->ApplyForceToCenter(b2Vec2(20.0f, 0.0f), true);
+		}*/
+		playerBody->SetLinearVelocity(b2Vec2(7.0f, playerBody->GetLinearVelocity().y));
 		m_direction = 1;
 	}
 	else {
-		playerBody->SetLinearVelocity(b2Vec2(playerBody->GetLinearVelocity().x * 0.95f, playerBody->GetLinearVelocity().y));
+		playerBody->SetLinearVelocity(b2Vec2(0.0f, playerBody->GetLinearVelocity().y));
 	}
 	
 	if (inputManager.isKeyPressed(SDL_BUTTON_LEFT))
 		m_punching = true;
 
-	float MAX_SPEED = 7.0f;
+	/*float MAX_SPEED = 7.0f;
 	if (playerBody->GetLinearVelocity().x < -MAX_SPEED) {
 		playerBody->SetLinearVelocity(b2Vec2(-MAX_SPEED, playerBody->GetLinearVelocity().y));
 	}
 	else if (playerBody->GetLinearVelocity().x > MAX_SPEED) {
 		playerBody->SetLinearVelocity(b2Vec2(MAX_SPEED, playerBody->GetLinearVelocity().y));
-	}
+	}*/
 
 	//loop through all contact points
 	for (b2ContactEdge* ce = playerBody->GetContactList(); ce != nullptr; ce = ce->next) {
@@ -148,12 +167,21 @@ void Player::update(JCEngine::InputManager& inputManager)
 		if (contact->IsTouching()) {
 			b2WorldManifold manifold;
 			contact->GetWorldManifold(&manifold);
+			b2Body* contactBody = contact->GetFixtureA()->GetBody();
+			b2Fixture* contactFixture = contact->GetFixtureA();
+			if (contactFixture->GetFriction() == 0.0f) {
+				return true;
+			}
 
 			bool below = false;
 			for (int i = 0; i < b2_maxManifoldPoints; i++) {
 				if (manifold.points[i].y < playerBody->GetPosition().y - m_collisionCapsule.getDimensions().y / 2.0f + m_collisionCapsule.getDimensions().x / 2.0f + 0.01f) {
 					below = true;
 					m_onGround = true;
+					//TileType type = *(TileType*)contactBody->GetUserData().pointer;
+					/*if (*(TileType*)contactBody->GetUserData().pointer == TileType::WATER) {
+						return true;
+					}*/
 					break;
 				}
 			}
@@ -168,5 +196,6 @@ void Player::update(JCEngine::InputManager& inputManager)
 	}
 
 	m_camera->SetPosition(glm::vec2(playerBody->GetPosition().x, playerBody->GetPosition().y));
-	
+
+	return false;
 }

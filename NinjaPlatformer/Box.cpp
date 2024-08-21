@@ -1,22 +1,35 @@
 #include "Box.h"
 
 //fixedRotation defaults to false
-Box::Box(b2World* world, const glm::vec2& position, const glm::vec2& dimensions, JCEngine::GLTexture texture, JCEngine::ColorRGBA8 color,
+Box::Box(b2World* world, const glm::vec2& position, const glm::vec2& dimensions, JCEngine::GLTexture texture, JCEngine::ColorRGBA8 color, TileType type,
 		bool fixedRotation, glm::vec4 uvRect) {
+
+	m_tileType = type;
 
 	b2BodyDef bodyDef;
 	bodyDef.type = b2_staticBody;
 	bodyDef.fixedRotation = fixedRotation;
 	bodyDef.position.Set(position.x, position.y);
+	//bodyDef.userData.pointer = (uintptr_t)&m_tileType;
 	m_body = world->CreateBody(&bodyDef);
 
 	b2PolygonShape boxShape;
-	boxShape.SetAsBox(dimensions.x / 2.0f, dimensions.y / 2.0f);
+	if (type == TileType::WATER) {
+		boxShape.SetAsBox(dimensions.x / 2.0f, dimensions.y / 4.0f);
+	}
+	else {
+		boxShape.SetAsBox(dimensions.x / 2.0f, dimensions.y / 2.0f);
+	}
 
 	b2FixtureDef fixtureDef;
 	fixtureDef.shape = &boxShape;
 	fixtureDef.density = 0.0f;
-	fixtureDef.friction = 0.3f;
+	if (type == TileType::WATER) {
+		fixtureDef.friction = 0.0f;
+	}
+	else {
+		fixtureDef.friction = 0.3f;
+	}
 
 	m_fixture = m_body->CreateFixture(&fixtureDef);
 

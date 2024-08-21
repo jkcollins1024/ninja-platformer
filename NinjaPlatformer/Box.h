@@ -5,11 +5,13 @@
 #include <JCEngine/Vertex.h>
 #include <JCEngine\SpriteBatch.h>
 #include <JCEngine\GLTexture.h>
+
+enum class TileType { GROUND, WATER };
 class Box
 {
 public:
 	Box() {}
-	Box(b2World* world, const glm::vec2& position, const glm::vec2& dimensions, JCEngine::GLTexture texture, JCEngine::ColorRGBA8 color,
+	Box(b2World* world, const glm::vec2& position, const glm::vec2& dimensions, JCEngine::GLTexture texture, JCEngine::ColorRGBA8 color, TileType type,
 		bool fixedRotation = false, glm::vec4 uvRect = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f));
 	~Box();
 
@@ -27,5 +29,6 @@ private:
 	glm::vec4 m_uvRect = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f);
 	JCEngine::ColorRGBA8 m_color;
 	JCEngine::GLTexture m_texture;
+	TileType m_tileType;
 };
 

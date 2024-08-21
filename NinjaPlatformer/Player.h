@@ -21,7 +21,7 @@ public:
 
 	void draw(JCEngine::SpriteBatch& spriteBatch);
 	void drawDebug(JCEngine::DebugRenderer& renderer);
-	void update(JCEngine::InputManager& inputManager);
+	bool update(JCEngine::InputManager& inputManager);
 
 	const Capsule& getCapsule() const { return m_collisionCapsule; }
 private:
