@@ -19,12 +19,12 @@ Projectile::~Projectile() {
 
 void Projectile::draw(JCEngine::SpriteBatch& spriteBatch) {
 	JCEngine::ColorRGBA8 color;
-	color.r = 0;
-	color.b = 0;
-	color.g = 0;
+	color.r = 255;
+	color.b = 255;
+	color.g = 255;
 	color.a = 255;
 
-	glm::vec4 positionForSprite = glm::vec4(_position.x, _position.y, 10, 10);
+	glm::vec4 positionForSprite = glm::vec4(_position.x, _position.y, 1, 1);
 	glm::vec4 uv(0.0f, 0.0f, 1.0f, 1.0f);
 
 	spriteBatch.draw(positionForSprite, uv, _textureId, 0, color);
@@ -34,32 +34,32 @@ bool Projectile::collideWithLevel(const std::vector<std::string>& levelData) {
 	std::vector<glm::vec2> collideTilePositions;
 
 	//check four corners
-	glm::vec2 cornerPosition1 = glm::vec2(floor(_position.x / 64.0f), floor(_position.y / 64.0f));
-	glm::vec2 cornerPosition2 = glm::vec2(floor((_position.x + 30) / 64.0f), floor(_position.y / 64.0f));
-	glm::vec2 cornerPosition3 = glm::vec2(floor(_position.x / 64.0f), floor((_position.y + 30) / 64.0f));
-	glm::vec2 cornerPosition4 = glm::vec2(floor((_position.x + 30) / 64.0f), floor((_position.y + 30) / 64.0f));
+	glm::vec2 cornerPosition1 = glm::vec2(floor(_position.x / 1.5f), floor(_position.y / 1.5f));
+	glm::vec2 cornerPosition2 = glm::vec2(floor((_position.x + 0.75f) / 1.5f), floor(_position.y / 1.5f));
+	glm::vec2 cornerPosition3 = glm::vec2(floor(_position.x / 1.5f), floor((_position.y + 0.75f) / 1.5f));
+	glm::vec2 cornerPosition4 = glm::vec2(floor((_position.x + 0.75f) / 1.5f), floor((_position.y + 0.75f) / 1.5f));
 
 	if (levelData[cornerPosition1.y][cornerPosition1.x] != '.') {
-		//glm::vec2 cornerPosition = glm::vec2(cornerPosition1.x * 64.0f + 32.0f, cornerPosition1.y * 64.0f + 32.0f);
-		glm::vec2 cornerPosition = (cornerPosition1 * 64.0f) + glm::vec2(32.0f);
+		//glm::vec2 cornerPosition = glm::vec2(cornerPosition1.x * 1.5f + 0.75f, cornerPosition1.y * 1.5f + 0.75f);
+		glm::vec2 cornerPosition = (cornerPosition1 * 1.5f) + glm::vec2(0.75f);
 		collideTilePositions.push_back(cornerPosition);
 	}
 
 	if (levelData[cornerPosition2.y][cornerPosition2.x] != '.') {
-		//glm::vec2 cornerPosition = glm::vec2(cornerPosition2.x * 64.0f + 32.0f, cornerPosition2.y * 64.0f + 32.0f);
-		glm::vec2 cornerPosition = (cornerPosition2 * 64.0f) + glm::vec2(32.0f);
+		//glm::vec2 cornerPosition = glm::vec2(cornerPosition2.x * 1.5f + 0.75f, cornerPosition2.y * 1.5f + 0.75f);
+		glm::vec2 cornerPosition = (cornerPosition2 * 1.5f) + glm::vec2(0.75f);
 		collideTilePositions.push_back(cornerPosition);
 	}
 
 	if (levelData[cornerPosition3.y][cornerPosition3.x] != '.') {
-		//glm::vec2 cornerPosition = glm::vec2(cornerPosition3.x * 64.0f + 32.0f, cornerPosition3.y * 64.0f + 32.0f);
-		glm::vec2 cornerPosition = (cornerPosition3 * 64.0f) + glm::vec2(32.0f);
+		//glm::vec2 cornerPosition = glm::vec2(cornerPosition3.x * 1.5f + 0.75f, cornerPosition3.y * 1.5f + 0.75f);
+		glm::vec2 cornerPosition = (cornerPosition3 * 1.5f) + glm::vec2(0.75f);
 		collideTilePositions.push_back(cornerPosition);
 	}
 
 	if (levelData[cornerPosition4.y][cornerPosition4.x] != '.') {
-		//glm::vec2 cornerPosition = glm::vec2(cornerPosition4.x * 64.0f + 32.0f, cornerPosition4.y * 64.0f + 32.0f);
-		glm::vec2 cornerPosition = (cornerPosition4 * 64.0f) + glm::vec2(32.0f);
+		//glm::vec2 cornerPosition = glm::vec2(cornerPosition4.x * 1.5f + 0.75f, cornerPosition4.y * 1.5f + 0.75f);
+		glm::vec2 cornerPosition = (cornerPosition4 * 1.5f) + glm::vec2(0.75f);
 		collideTilePositions.push_back(cornerPosition);
 	}
 
@@ -72,10 +72,10 @@ bool Projectile::collideWithLevel(const std::vector<std::string>& levelData) {
 }
 
 bool Projectile::collideWithTile(glm::vec2 tilePosition) {
-	const float AGENT_RADIUS = 32.0f;
-	const float MIN_DISTANCE = 64.0f;
+	const float AGENT_RADIUS = 0.75f;
+	const float MIN_DISTANCE = 1.5f;
 
-	glm::vec2 centerPlayerPosition = _position + glm::vec2(32.0f);
+	glm::vec2 centerPlayerPosition = _position + glm::vec2(0.75f);
 	glm::vec2 distVec = centerPlayerPosition - tilePosition;
 
 	float xdepth = MIN_DISTANCE - abs(distVec.x);

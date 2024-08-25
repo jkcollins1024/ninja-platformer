@@ -127,14 +127,17 @@ void GameplayScreen::onEntry()
 			case '@':
 				startPlayerPosition.x = x * TILE_WIDTH;
 				startPlayerPosition.y = y * TILE_WIDTH;
+				m_levelData[y][x] = '.';
 				break;
 			case 'S':
 				//slime enemies - make these actors
-				m_boxes.emplace_back(game_world, glm::vec2(x * TILE_WIDTH, y * TILE_WIDTH), glm::vec2(TILE_WIDTH, TILE_WIDTH), JCEngine::ResourceManager::getTexture("Assets/slimeWalk1.png"), tileColor, TileType::GROUND);
+				//m_enemies.push_back(new Enemy(glm::vec2(x * TILE_WIDTH, y * TILE_WIDTH)));// (game_world, glm::vec2(x * TILE_WIDTH, y * TILE_WIDTH), glm::vec2(TILE_WIDTH, TILE_WIDTH), JCEngine::ResourceManager::getTexture("Assets/slimeWalk1.png"), tileColor, TileType::GROUND);
+				m_levelData[y][x] = '.';
 				break;
 			case 'F':
 				//fly enemies - make these actors
 				m_boxes.emplace_back(game_world, glm::vec2(x * TILE_WIDTH, y * TILE_WIDTH), glm::vec2(TILE_WIDTH, TILE_WIDTH), JCEngine::ResourceManager::getTexture("Assets/flyFly1.png"), tileColor, TileType::GROUND);
+				m_levelData[y][x] = '.';
 				break;
 			case '.':
 				break;
@@ -170,11 +173,49 @@ void GameplayScreen::onExit()
 
 void GameplayScreen::update()
 {
+	float timeStep = 1.0f / 60.0f;
 	m_camera.Update();
 	checkInput();
-	if (m_player.update(m_game->inputManager, m_projectiles, 1.0f / 60.0f)) {
+	if (m_player.update(m_game->inputManager, m_projectiles, timeStep)) {
 		JCEngine::fatalError("");//dead
 	}
+
+	for (int i = 0; i < m_projectiles.size(); i++) {
+		Projectile* bullet = m_projectiles[i];
+
+		bullet->update(timeStep);
+
+		if (m_projectiles[i]->isDead() || m_projectiles[i]->collideWithLevel(m_levelData)) {
+			m_projectiles[i] = m_projectiles.back();
+			m_projectiles.pop_back();
+			i--;
+			continue;
+		}
+
+		for (int j = 0; j < m_enemies.size();) {
+			Enemy* enemy = m_enemies[j];
+
+			if (m_projectiles[i]->collideWithEnemy(enemy)) {
+				//addDebris(glm::vec2(asteroid->getBody()->GetPosition().x, asteroid->getBody()->GetPosition().y), 100);
+
+				//destroy asteroid here
+				delete enemy;
+				m_enemies[j] = m_enemies.back();
+				m_enemies.pop_back();
+
+				m_projectiles[i] = m_projectiles.back();
+				m_projectiles.pop_back();
+				i--;
+
+				//restart loop for bullet
+				break;
+			}
+			else {
+				j++;
+			}
+		}
+	}
+
 	//update physics simulation
 	game_world->Step(1.0f / 60.0f, 6, 2);
 }
@@ -202,8 +243,8 @@ void GameplayScreen::draw()
 		box.draw(m_spriteBatch);
 	}
 
-	for (int i = 0; i < m_projectiles.size(); i++) {
-		m_projectiles[i]->draw(m_spriteBatch);
+	for (auto& projectile : m_projectiles) {
+		projectile->draw(m_spriteBatch);
 	}
 
 	m_player.draw(m_spriteBatch);

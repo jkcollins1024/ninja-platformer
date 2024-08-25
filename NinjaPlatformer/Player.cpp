@@ -150,7 +150,7 @@ bool Player::update(JCEngine::InputManager& inputManager, std::vector<Projectile
 		playerBody->SetLinearVelocity(b2Vec2(0.0f, playerBody->GetLinearVelocity().y));
 	}
 	
-	m_frameCount += 1.0f * deltaTime;
+	m_frameCount += 1;
 	if (inputManager.isKeyPressed(SDL_BUTTON_LEFT) && m_frameCount >= m_fireRate) {
 		m_punching = true;
 		//throw projectile
@@ -208,7 +208,7 @@ bool Player::update(JCEngine::InputManager& inputManager, std::vector<Projectile
 }
 
 void Player::fire(const glm::vec2& direction, const glm::vec2& position, std::vector<Projectile*>& projectiles) {
-	Projectile* energyBall = new Projectile(15.0f, direction, position, 150, JCEngine::ResourceManager::getTexture("Assets/energyball.png").id, 1);
+	Projectile* energyBall = new Projectile(8.0f, direction, position, 150, JCEngine::ResourceManager::getTexture("Assets/energyball.png").id, 1);
 
 	projectiles.push_back(energyBall);
 	//_fireEffect.play();

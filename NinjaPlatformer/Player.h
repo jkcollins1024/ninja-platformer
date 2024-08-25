@@ -40,7 +40,7 @@ private:
 	float m_animTime = 0.0f;
 	PlayerMoveState m_moveState = PlayerMoveState::STANDING;
 	JCEngine::Camera2D* m_camera;
-	int m_fireRate = 10.0f;
+	int m_fireRate = 30;
 	int m_frameCount;
 };
 

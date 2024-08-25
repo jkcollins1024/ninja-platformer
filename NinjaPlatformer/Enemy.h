@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Actor.h"
+
 #include <glm/glm.hpp>
 #include <JCEngine/SpriteBatch.h>
 #include <JCEngine/GLTexture.h>
@@ -7,43 +9,15 @@
 #include <JCEngine\Camera2D.h>
 #include <JCEngine/TileSheet.h>
 
-class Enemy
+class Enemy : public Actor
 {
 public:
-	Enemy();
+	Enemy(glm::vec2 position);
 	~Enemy();
-
-	virtual void draw(JCEngine::SpriteBatch& spriteBatch);
 
 	//depends on actors around it - will need some processing in main game
 	//virtual void move(const std::vector<std::string>& levelData, std::vector<Enemy*>& actors, Player* player, float deltaTime) {};
 
 	//returns true if dead
 	bool applyDamage(int damage);
-
-	//bool collideWithLevel(const std::vector<std::string>& levelData);
-	//bool collideWithActor(Enemy* actor);
-
-	//getters
-	glm::vec2 getPosition() { return _position; };
-
-	//setters
-	void setPosition(glm::vec2 position) { _position = position; };
-	void setDirection(glm::vec2 direction) { _direction = direction; _directionFacing = direction; };
-
-protected:
-	float _speed = 20;
-	float m_animTime = 0.0f;
-	glm::vec2 _position;
-	glm::vec2 _size;
-	glm::vec4 _uv;
-	JCEngine::ColorRGBA8 _color;
-	JCEngine::GLTexture _texture;
-	JCEngine::TileSheet m_walkTileSheet;
-	glm::vec2 _direction;
-	glm::vec2 _directionFacing;
-	int _frames;
-	int _health;
-
-	//void collideWithTile(glm::vec2 tilePosition);
 };
