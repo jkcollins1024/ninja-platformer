@@ -5,12 +5,14 @@
 #include <JCEngine/ResourceManager.h>
 
 Projectile::Projectile(float speed, glm::vec2 direction, glm::vec2 position, int lifetime, GLuint textureId, int damage) {
-	_speed = speed;
-	_direction = direction;
-	_position = position;
-	_lifetime = lifetime;
-	_textureId = textureId;
-	_damage = damage;
+	m_speed = speed;
+	m_direction = direction;
+	m_position = position;
+	m_lifetime = lifetime;
+	m_textureId = textureId;
+	m_damage = damage;
+
+	m_radius = 0.5f;
 }
 
 Projectile::~Projectile() {
@@ -24,20 +26,20 @@ void Projectile::draw(JCEngine::SpriteBatch& spriteBatch) {
 	color.g = 255;
 	color.a = 255;
 
-	glm::vec4 positionForSprite = glm::vec4(_position.x - 0.5f, _position.y - 0.5f, 1, 1);
+	glm::vec4 positionForSprite = glm::vec4(m_position.x - 0.5f, m_position.y - 0.5f, 1, 1);
 	glm::vec4 uv(0.0f, 0.0f, 1.0f, 1.0f);
 
-	spriteBatch.draw(positionForSprite, uv, _textureId, 0, color);
+	spriteBatch.draw(positionForSprite, uv, m_textureId, 0, color);
 }
 
 bool Projectile::collideWithLevel(const std::vector<std::string>& levelData) {
 	std::vector<glm::vec2> collideTilePositions;
 
 	//check four corners
-	glm::vec2 cornerPosition1 = glm::vec2(floor((_position.x - 0.5f) / 1.5f), floor((_position.y - 0.5f) / 1.5f));
-	glm::vec2 cornerPosition2 = glm::vec2(floor((_position.x + 0.5f) / 1.5f), floor((_position.y - 0.5f) / 1.5f));
-	glm::vec2 cornerPosition3 = glm::vec2(floor((_position.x - 0.5f) / 1.5f), floor((_position.y + 0.5f) / 1.5f));
-	glm::vec2 cornerPosition4 = glm::vec2(floor((_position.x + 0.5f) / 1.5f), floor((_position.y + 0.5f) / 1.5f));
+	glm::vec2 cornerPosition1 = glm::vec2(floor((m_position.x - 0.5f) / 1.5f), floor((m_position.y - 0.5f) / 1.5f));
+	glm::vec2 cornerPosition2 = glm::vec2(floor((m_position.x + 0.5f) / 1.5f), floor((m_position.y - 0.5f) / 1.5f));
+	glm::vec2 cornerPosition3 = glm::vec2(floor((m_position.x - 0.5f) / 1.5f), floor((m_position.y + 0.5f) / 1.5f));
+	glm::vec2 cornerPosition4 = glm::vec2(floor((m_position.x + 0.5f) / 1.5f), floor((m_position.y + 0.5f) / 1.5f));
 
 	if (levelData[cornerPosition1.y][cornerPosition1.x] != '.') {
 		//glm::vec2 cornerPosition = glm::vec2(cornerPosition1.x * 1.5f + 0.75f, cornerPosition1.y * 1.5f + 0.75f);
@@ -75,7 +77,7 @@ bool Projectile::collideWithTile(glm::vec2 tilePosition) {
 	const float TILE_HALF = 0.75f;
 	const float MIN_DISTANCE = 1.25f;
 
-	glm::vec2 centerPlayerPosition = _position;
+	glm::vec2 centerPlayerPosition = m_position;
 	glm::vec2 distVec = centerPlayerPosition - tilePosition;
 
 	float xdist = abs(distVec.x);
@@ -101,16 +103,14 @@ bool Projectile::collideWithTile(glm::vec2 tilePosition) {
 }
 
 bool Projectile::collideWithEnemy(Enemy* enemy) {
-	const float MIN_DISTANCE = 37.0f;
-
-	glm::vec2 currentCenter = _position;
-	glm::vec2 otherCenter = enemy->getPosition() + glm::vec2(1.0f);
+	glm::vec2 currentCenter = m_position;
+	glm::vec2 otherCenter = enemy->getPosition();
 
 	glm::vec2 distVec = currentCenter - otherCenter;
 
 	float depth = glm::length(distVec);
 
-	if (depth < MIN_DISTANCE) {
+	if (depth <= m_radius + enemy->getHitboxRadius()) {
 		return true;
 	}
 	return false;
@@ -118,8 +118,8 @@ bool Projectile::collideWithEnemy(Enemy* enemy) {
 
 //returns position to determine collision when bullet should be destroyed
 glm::vec2 Projectile::update(float deltaTime) {
-	_position += _direction * _speed * deltaTime;
-	_lifetime--;
+	m_position += m_direction * m_speed * deltaTime;
+	m_lifetime--;
 
-	return _position;
+	return m_position;
 }

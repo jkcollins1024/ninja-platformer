@@ -1,4 +1,6 @@
 #include "GameplayScreen.h"
+#include "Slime.h"
+#include "Fly.h"
 #include <iostream>
 #include <fstream>
 #include <SDL\SDL_events.h>
@@ -131,12 +133,12 @@ void GameplayScreen::onEntry()
 				break;
 			case 'S':
 				//slime enemies - make these actors
-				//m_enemies.push_back(new Enemy(glm::vec2(x * TILE_WIDTH, y * TILE_WIDTH)));// (game_world, glm::vec2(x * TILE_WIDTH, y * TILE_WIDTH), glm::vec2(TILE_WIDTH, TILE_WIDTH), JCEngine::ResourceManager::getTexture("Assets/slimeWalk1.png"), tileColor, TileType::GROUND);
+				m_enemies.push_back(new Slime(glm::vec2(x * TILE_WIDTH, y * TILE_WIDTH)));// (game_world, glm::vec2(x * TILE_WIDTH, y * TILE_WIDTH), glm::vec2(TILE_WIDTH, TILE_WIDTH), JCEngine::ResourceManager::getTexture("Assets/slimeWalk1.png"), tileColor, TileType::GROUND);
 				m_levelData[y][x] = '.';
 				break;
 			case 'F':
 				//fly enemies - make these actors
-				m_boxes.emplace_back(game_world, glm::vec2(x * TILE_WIDTH + TILE_WIDTH / 2.0f, y * TILE_WIDTH + TILE_WIDTH / 2.0f), glm::vec2(TILE_WIDTH, TILE_WIDTH), JCEngine::ResourceManager::getTexture("Assets/flyFly1.png"), tileColor, TileType::GROUND);
+				m_enemies.push_back(new Fly(glm::vec2(x * TILE_WIDTH, y * TILE_WIDTH))); //m_boxes.emplace_back(game_world, glm::vec2(x * TILE_WIDTH + TILE_WIDTH / 2.0f, y * TILE_WIDTH + TILE_WIDTH / 2.0f), glm::vec2(TILE_WIDTH, TILE_WIDTH), JCEngine::ResourceManager::getTexture("Assets/flyFly1.png"), tileColor, TileType::GROUND);
 				m_levelData[y][x] = '.';
 				break;
 			case '.':
@@ -181,6 +183,10 @@ void GameplayScreen::update()
 	checkInput();
 	if (m_player.update(m_game->inputManager, m_projectiles, timeStep)) {
 		JCEngine::fatalError("");//dead
+	}
+
+	for (auto& enemy : m_enemies) {
+		enemy->move(timeStep);
 	}
 
 	for (int i = 0; i < m_projectiles.size(); i++) {
@@ -256,6 +262,10 @@ void GameplayScreen::draw()
 		projectile->draw(m_spriteBatch);
 	}
 
+	for (auto& enemy : m_enemies) {
+		enemy->draw(m_spriteBatch);
+	}
+
 	m_player.draw(m_spriteBatch);
 
 	m_spriteBatch.end();
@@ -279,6 +289,11 @@ void GameplayScreen::draw()
 
 		for (auto& projectile : m_projectiles) {
 			m_debugRenderer.drawCircle(projectile->getPosition(), JCEngine::ColorRGBA8(255, 255, 255, 255), 0.5f);
+		}
+
+		for (auto& enemy : m_enemies) {
+			//m_debugRenderer.drawCircle(enemy->getPosition(), JCEngine::ColorRGBA8(255, 255, 255, 255), enemy->getHitboxRadius());
+			m_debugRenderer.drawBox(glm::vec4(enemy->getPosition().x - 1.0f, enemy->getPosition().y - 0.5f, 2.0f, 1.0f), JCEngine::ColorRGBA8(255, 255, 255, 255), 0.0f);
 		}
 
 		m_debugRenderer.end();

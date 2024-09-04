@@ -156,7 +156,7 @@ bool Player::update(JCEngine::InputManager& inputManager, std::vector<Projectile
 		//throw projectile
 	
 		b2Vec2 playerPosition = playerBody->GetPosition();
-		fire(m_direction == 1 ? glm::vec2(1.0f, 0.0f) : glm::vec2(-1.0f, 0.0f), glm::vec2(playerPosition.x, playerPosition.y), bullets);
+		fire((float)m_direction * glm::vec2(1.0f, 0.0f), glm::vec2(playerPosition.x, playerPosition.y), bullets);
 		m_frameCount = 0;
 	}
 

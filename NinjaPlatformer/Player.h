@@ -8,6 +8,7 @@
 
 #include "Capsule.h"
 #include "Projectile.h"
+#include "Actor.h"
 #include <JCEngine\TileSheet.h>
 #include <JCEngine/Camera2D.h>
 
@@ -15,7 +16,7 @@ class Projectile;
 
 enum class PlayerMoveState { STANDING, RUNNING, PUNCHING, IN_AIR };
 
-class Player
+class Player : public Actor
 {
 public:
 	Player() {}
@@ -31,13 +32,11 @@ public:
 private:
 	Capsule m_collisionCapsule;
 	JCEngine::TileSheet m_textureSheet;
-	JCEngine::ColorRGBA8 m_color;
 	glm::vec2 m_drawDimensions;
 	bool m_onGround = false;
 	bool m_punching = false;
 	//1 for right, -1 for left
 	int m_direction = 1;
-	float m_animTime = 0.0f;
 	PlayerMoveState m_moveState = PlayerMoveState::STANDING;
 	JCEngine::Camera2D* m_camera;
 	int m_fireRate = 30;

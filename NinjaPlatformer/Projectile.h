@@ -20,18 +20,20 @@ public:
 
 	bool collideWithLevel(const std::vector<std::string>& levelData);
 
-	bool isDead() { return _lifetime <= 0; };
-	int getDamage() { return _damage; };
-	glm::vec2 getPosition() { return _position; };
+	bool isDead() { return m_lifetime <= 0; };
+	int getDamage() { return m_damage; };
+	glm::vec2 getPosition() { return m_position; };
+	float getRadius() { return m_radius; };
 
 
 private:
-	float _speed;
-	int _lifetime;
-	glm::vec2 _direction;
-	glm::vec2 _position;
-	GLuint _textureId;
-	int _damage;
+	float m_speed;
+	int m_lifetime;
+	glm::vec2 m_direction;
+	glm::vec2 m_position;
+	GLuint m_textureId;
+	int m_damage;
+	float m_radius;
 
 	bool collideWithTile(glm::vec2 tilePosition);
 };

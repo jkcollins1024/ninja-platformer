@@ -8,6 +8,8 @@ public:
 	Fly(glm::vec2 position);
 	~Fly();
 
-	virtual void draw(JCEngine::SpriteBatch& spriteBatch) override;
-	virtual void move(const std::vector<std::string>& levelData, float deltaTime) override;
+	//virtual void draw(JCEngine::SpriteBatch& spriteBatch) override;
+	//virtual void move(const std::vector<std::string>& levelData, float deltaTime) override;
+protected:
+	virtual glm::vec4 getUV() override;
 };

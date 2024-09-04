@@ -8,17 +8,36 @@
 #include <JCEngine\ResourceManager.h>
 
 Enemy::Enemy(glm::vec2 position) {
-	_position = position;
+	m_position = position;
 }
 
 Enemy::~Enemy() {
 
 }
 
-bool Enemy::applyDamage(int damage) {
-	_health -= damage;
+void Enemy::move(float deltaTime) {
+	if (m_frameCount == 100) {
+		m_directionFacing = -m_directionFacing;
+		m_frameCount = 0;
+	}
+	else {
+		m_frameCount++;
+	}
 
-	return _health <= 0;
+	m_position += m_directionFacing * m_speed * deltaTime;
+
+	//collideWithLevel(levelData);
+}
+
+void Enemy::draw(JCEngine::SpriteBatch& spriteBatch) {
+	int animationSpeed = 8;
+	int tileIndex = (m_frameCount / animationSpeed) % m_textures.size();
+	glm::vec4 positionRect(m_position.x - m_size.x / 2.0f, m_position.y - m_size.y / 2.0f, m_size.x, m_size.y);
+	GLuint textureID;
+
+	textureID = m_textures[tileIndex].id;
+
+	spriteBatch.draw(positionRect, getUV(), textureID, 0.0f, m_color, m_directionFacing);
 }
 
 //bool Enemy::collideWithLevel(const std::vector<std::string>& levelData) {
