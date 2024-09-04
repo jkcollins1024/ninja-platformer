@@ -1,4 +1,5 @@
 #include "Box.h"
+#include <JCEngine/SpriteFont.h>
 
 //fixedRotation defaults to false
 Box::Box(b2World* world, const glm::vec2& position, const glm::vec2& dimensions, JCEngine::GLTexture texture, JCEngine::ColorRGBA8 color, TileType type,
@@ -46,4 +47,12 @@ Box::~Box() {
 void Box::draw(JCEngine::SpriteBatch& spriteBatch) {
 	glm::vec4 destRect(m_body->GetPosition().x - m_dimensions.x / 2.0f, m_body->GetPosition().y - m_dimensions.y / 2.0f, m_dimensions);
 	spriteBatch.draw(destRect, m_uvRect, m_texture.id, 0.0f, m_color, m_body->GetAngle());
+}
+
+void Box::drawPositions(JCEngine::SpriteBatch& spriteBatch, JCEngine::SpriteFont* spriteFont) {
+	char buffer[256];
+	sprintf_s(buffer, "%.2f, %.2f", m_body->GetPosition().x, m_body->GetPosition().y);
+	//sprintf_s(buffer, "%f, %f", );
+
+	spriteFont->draw(spriteBatch, buffer, glm::vec2(m_body->GetPosition().x, m_body->GetPosition().y), glm::vec2(0.01f), 0, JCEngine::ColorRGBA8(0, 0, 0, 255));
 }

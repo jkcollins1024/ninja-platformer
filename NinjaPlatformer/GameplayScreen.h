@@ -11,6 +11,7 @@
 #include "Box.h"
 #include <NinjaPlatformer\Player.h>
 #include <JCEngine\DebugRenderer.h>
+#include <JCEngine\SpriteFont.h>
 
 class GameplayScreen : public JCEngine::IGameScreen
 {
@@ -37,6 +38,8 @@ public:
 private:
 	void checkInput();
 
+	void drawHUD();
+
 	b2World* game_world;
 	std::vector<Box> m_boxes;
 	Player m_player;
@@ -51,6 +54,10 @@ private:
 	//JCEngine::GLTexture m_texture;
 	JCEngine::Window* m_window;
 	JCEngine::DebugRenderer m_debugRenderer;
+
+	JCEngine::SpriteFont* _spriteFont;
+	JCEngine::SpriteBatch _hudSpriteBatch;
+	JCEngine::Camera2D _hudCamera;
 
 };
 

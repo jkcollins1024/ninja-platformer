@@ -95,38 +95,38 @@ void GameplayScreen::onEntry()
 
 			switch (m_levelData[y][x]) {
 			case 'B':
-				m_boxes.emplace_back(game_world, glm::vec2(x * TILE_WIDTH, y * TILE_WIDTH), glm::vec2(TILE_WIDTH), JCEngine::ResourceManager::getTexture("Assets/boxAlt.png"), tileColor, TileType::GROUND);
+				m_boxes.emplace_back(game_world, glm::vec2(x * TILE_WIDTH + TILE_WIDTH / 2.0f, y * TILE_WIDTH + TILE_WIDTH / 2.0f), glm::vec2(TILE_WIDTH), JCEngine::ResourceManager::getTexture("Assets/boxAlt.png"), tileColor, TileType::GROUND);
 				break;
 			case 'T':
-				m_boxes.emplace_back(game_world, glm::vec2(x * TILE_WIDTH, y * TILE_WIDTH), glm::vec2(TILE_WIDTH), JCEngine::ResourceManager::getTexture("Assets/grassHillRight2.png"), tileColor, TileType::GROUND);
+				m_boxes.emplace_back(game_world, glm::vec2(x * TILE_WIDTH + TILE_WIDTH / 2.0f, y * TILE_WIDTH + TILE_WIDTH / 2.0f), glm::vec2(TILE_WIDTH), JCEngine::ResourceManager::getTexture("Assets/grassHillRight2.png"), tileColor, TileType::GROUND);
 				break;
 			case 'G':
-				m_boxes.emplace_back(game_world, glm::vec2(x * TILE_WIDTH, y * TILE_WIDTH), glm::vec2(TILE_WIDTH), JCEngine::ResourceManager::getTexture("Assets/grassMid.png"), tileColor, TileType::GROUND);
+				m_boxes.emplace_back(game_world, glm::vec2(x * TILE_WIDTH + TILE_WIDTH / 2.0f, y * TILE_WIDTH + TILE_WIDTH / 2.0f), glm::vec2(TILE_WIDTH), JCEngine::ResourceManager::getTexture("Assets/grassMid.png"), tileColor, TileType::GROUND);
 				break;
 			case 'K':
-				m_boxes.emplace_back(game_world, glm::vec2(x * TILE_WIDTH, y * TILE_WIDTH), glm::vec2(TILE_WIDTH), JCEngine::ResourceManager::getTexture("Assets/grassHillLeft2.png"), tileColor, TileType::GROUND);
+				m_boxes.emplace_back(game_world, glm::vec2(x * TILE_WIDTH + TILE_WIDTH / 2.0f, y * TILE_WIDTH + TILE_WIDTH / 2.0f), glm::vec2(TILE_WIDTH), JCEngine::ResourceManager::getTexture("Assets/grassHillLeft2.png"), tileColor, TileType::GROUND);
 				break;
 			case 'D':
-				m_boxes.emplace_back(game_world, glm::vec2(x * TILE_WIDTH, y * TILE_WIDTH), glm::vec2(TILE_WIDTH), JCEngine::ResourceManager::getTexture("Assets/grassCenter.png"), tileColor, TileType::GROUND);
+				m_boxes.emplace_back(game_world, glm::vec2(x * TILE_WIDTH + TILE_WIDTH / 2.0f, y * TILE_WIDTH + TILE_WIDTH / 2.0f), glm::vec2(TILE_WIDTH), JCEngine::ResourceManager::getTexture("Assets/grassCenter.png"), tileColor, TileType::GROUND);
 				break;
 			case 'L':
-				m_boxes.emplace_back(game_world, glm::vec2(x * TILE_WIDTH, y * TILE_WIDTH), glm::vec2(TILE_WIDTH), JCEngine::ResourceManager::getTexture("Assets/grassCliffLeft.png"), tileColor, TileType::GROUND);
+				m_boxes.emplace_back(game_world, glm::vec2(x * TILE_WIDTH + TILE_WIDTH / 2.0f, y * TILE_WIDTH + TILE_WIDTH / 2.0f), glm::vec2(TILE_WIDTH), JCEngine::ResourceManager::getTexture("Assets/grassCliffLeft.png"), tileColor, TileType::GROUND);
 				break;
 			case 'R':
-				m_boxes.emplace_back(game_world, glm::vec2(x * TILE_WIDTH, y * TILE_WIDTH), glm::vec2(TILE_WIDTH), JCEngine::ResourceManager::getTexture("Assets/grassCliffRight.png"), tileColor, TileType::GROUND);
+				m_boxes.emplace_back(game_world, glm::vec2(x * TILE_WIDTH + TILE_WIDTH / 2.0f, y * TILE_WIDTH + TILE_WIDTH / 2.0f), glm::vec2(TILE_WIDTH), JCEngine::ResourceManager::getTexture("Assets/grassCliffRight.png"), tileColor, TileType::GROUND);
 				break;
 			case 'W':
-				m_boxes.emplace_back(game_world, glm::vec2(x * TILE_WIDTH, y * TILE_WIDTH), glm::vec2(TILE_WIDTH, TILE_WIDTH), JCEngine::ResourceManager::getTexture("Assets/liquidWaterTop_mid.png"), tileColor, TileType::WATER);
+				m_boxes.emplace_back(game_world, glm::vec2(x * TILE_WIDTH + TILE_WIDTH / 2.0f, y * TILE_WIDTH + TILE_WIDTH / 2.0f), glm::vec2(TILE_WIDTH, TILE_WIDTH), JCEngine::ResourceManager::getTexture("Assets/liquidWaterTop_mid.png"), tileColor, TileType::WATER);
 				break;
 			case 'P':
-				m_boxes.emplace_back(game_world, glm::vec2(x * TILE_WIDTH, y * TILE_WIDTH), glm::vec2(TILE_WIDTH, TILE_WIDTH), JCEngine::ResourceManager::getTexture("Assets/liquidWater.png"), tileColor, TileType::GROUND);
+				m_boxes.emplace_back(game_world, glm::vec2(x * TILE_WIDTH + TILE_WIDTH / 2.0f, y * TILE_WIDTH + TILE_WIDTH / 2.0f), glm::vec2(TILE_WIDTH, TILE_WIDTH), JCEngine::ResourceManager::getTexture("Assets/liquidWater.png"), tileColor, TileType::GROUND);
 				break;
 			case 'E':
-				m_boxes.emplace_back(game_world, glm::vec2(x * TILE_WIDTH, y * TILE_WIDTH), glm::vec2(TILE_WIDTH, TILE_WIDTH), JCEngine::ResourceManager::getTexture("Assets/signExit.png"), tileColor, TileType::GROUND);
+				m_boxes.emplace_back(game_world, glm::vec2(x * TILE_WIDTH + TILE_WIDTH / 2.0f, y * TILE_WIDTH + TILE_WIDTH / 2.0f), glm::vec2(TILE_WIDTH, TILE_WIDTH), JCEngine::ResourceManager::getTexture("Assets/signExit.png"), tileColor, TileType::GROUND);
 				break;
 			case '@':
-				startPlayerPosition.x = x * TILE_WIDTH;
-				startPlayerPosition.y = y * TILE_WIDTH;
+				startPlayerPosition.x = x * TILE_WIDTH + TILE_WIDTH / 2.0f;
+				startPlayerPosition.y = y * TILE_WIDTH + TILE_WIDTH / 2.0f;
 				m_levelData[y][x] = '.';
 				break;
 			case 'S':
@@ -136,7 +136,7 @@ void GameplayScreen::onEntry()
 				break;
 			case 'F':
 				//fly enemies - make these actors
-				m_boxes.emplace_back(game_world, glm::vec2(x * TILE_WIDTH, y * TILE_WIDTH), glm::vec2(TILE_WIDTH, TILE_WIDTH), JCEngine::ResourceManager::getTexture("Assets/flyFly1.png"), tileColor, TileType::GROUND);
+				m_boxes.emplace_back(game_world, glm::vec2(x * TILE_WIDTH + TILE_WIDTH / 2.0f, y * TILE_WIDTH + TILE_WIDTH / 2.0f), glm::vec2(TILE_WIDTH, TILE_WIDTH), JCEngine::ResourceManager::getTexture("Assets/flyFly1.png"), tileColor, TileType::GROUND);
 				m_levelData[y][x] = '.';
 				break;
 			case '.':
@@ -162,6 +162,9 @@ void GameplayScreen::onEntry()
 	//init camera
 	m_camera.Init(m_window->GetScreenWidth(), m_window->GetScreenHeight());
 	m_camera.SetScale(32.0f);
+
+	//font for debug
+	_spriteFont = new JCEngine::SpriteFont("Fonts/chintzy.ttf", 8);
 
 	m_player = Player(game_world, startPlayerPosition, glm::vec2(0.8f, 1.8f), glm::vec2(2.0f), JCEngine::ColorRGBA8(255, 255, 255, 255), &m_camera);
 }
@@ -241,7 +244,13 @@ void GameplayScreen::draw()
 
 	for (auto& box : m_boxes) {
 		box.draw(m_spriteBatch);
+
+		/*if (m_renderDebug) {
+			box.drawPositions(m_spriteBatch, _spriteFont);
+		}*/
 	}
+
+	//drawHUD();
 
 	for (auto& projectile : m_projectiles) {
 		projectile->draw(m_spriteBatch);
@@ -268,8 +277,24 @@ void GameplayScreen::draw()
 		//render player
 		m_player.drawDebug(m_debugRenderer);
 
+		for (auto& projectile : m_projectiles) {
+			m_debugRenderer.drawCircle(projectile->getPosition(), JCEngine::ColorRGBA8(255, 255, 255, 255), 0.5f);
+		}
+
 		m_debugRenderer.end();
 		m_debugRenderer.render(projectionMatrix, 2.0f);
+	}
+}
+
+void GameplayScreen::drawHUD() {
+	char buffer[256];
+
+	GLuint pLocation = m_textureProgram.getUniformLocation("P");
+	glm::mat4 cameraMatrix = m_camera.GetCameraMatrix();
+	glUniformMatrix4fv(pLocation, 1, GL_FALSE, &(cameraMatrix[0][0]));
+
+	for (auto& box : m_boxes) {
+		box.drawPositions(m_spriteBatch, _spriteFont);
 	}
 }
 

@@ -5,6 +5,7 @@
 #include <JCEngine/Vertex.h>
 #include <JCEngine\SpriteBatch.h>
 #include <JCEngine\GLTexture.h>
+#include <JCEngine\SpriteFont.h>
 
 enum class TileType { GROUND, WATER };
 class Box
@@ -16,6 +17,7 @@ public:
 	~Box();
 
 	void draw(JCEngine::SpriteBatch& spriteBatch);
+	void drawPositions(JCEngine::SpriteBatch& spriteBatch, JCEngine::SpriteFont* spriteFont);
 
 	b2Body* getBody() const { return m_body; }
 	b2Fixture* getFixture() const { return m_fixture; }

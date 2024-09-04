@@ -24,7 +24,7 @@ void Projectile::draw(JCEngine::SpriteBatch& spriteBatch) {
 	color.g = 255;
 	color.a = 255;
 
-	glm::vec4 positionForSprite = glm::vec4(_position.x, _position.y, 1, 1);
+	glm::vec4 positionForSprite = glm::vec4(_position.x - 0.5f, _position.y - 0.5f, 1, 1);
 	glm::vec4 uv(0.0f, 0.0f, 1.0f, 1.0f);
 
 	spriteBatch.draw(positionForSprite, uv, _textureId, 0, color);
@@ -34,10 +34,10 @@ bool Projectile::collideWithLevel(const std::vector<std::string>& levelData) {
 	std::vector<glm::vec2> collideTilePositions;
 
 	//check four corners
-	glm::vec2 cornerPosition1 = glm::vec2(floor(_position.x / 1.5f), floor(_position.y / 1.5f));
-	glm::vec2 cornerPosition2 = glm::vec2(floor((_position.x + 0.75f) / 1.5f), floor(_position.y / 1.5f));
-	glm::vec2 cornerPosition3 = glm::vec2(floor(_position.x / 1.5f), floor((_position.y + 0.75f) / 1.5f));
-	glm::vec2 cornerPosition4 = glm::vec2(floor((_position.x + 0.75f) / 1.5f), floor((_position.y + 0.75f) / 1.5f));
+	glm::vec2 cornerPosition1 = glm::vec2(floor((_position.x - 0.5f) / 1.5f), floor((_position.y - 0.5f) / 1.5f));
+	glm::vec2 cornerPosition2 = glm::vec2(floor((_position.x + 0.5f) / 1.5f), floor((_position.y - 0.5f) / 1.5f));
+	glm::vec2 cornerPosition3 = glm::vec2(floor((_position.x - 0.5f) / 1.5f), floor((_position.y + 0.5f) / 1.5f));
+	glm::vec2 cornerPosition4 = glm::vec2(floor((_position.x + 0.5f) / 1.5f), floor((_position.y + 0.5f) / 1.5f));
 
 	if (levelData[cornerPosition1.y][cornerPosition1.x] != '.') {
 		//glm::vec2 cornerPosition = glm::vec2(cornerPosition1.x * 1.5f + 0.75f, cornerPosition1.y * 1.5f + 0.75f);
@@ -72,18 +72,32 @@ bool Projectile::collideWithLevel(const std::vector<std::string>& levelData) {
 }
 
 bool Projectile::collideWithTile(glm::vec2 tilePosition) {
-	const float AGENT_RADIUS = 0.75f;
-	const float MIN_DISTANCE = 1.5f;
+	const float TILE_HALF = 0.75f;
+	const float MIN_DISTANCE = 1.25f;
 
-	glm::vec2 centerPlayerPosition = _position + glm::vec2(0.75f);
+	glm::vec2 centerPlayerPosition = _position;
 	glm::vec2 distVec = centerPlayerPosition - tilePosition;
 
-	float xdepth = MIN_DISTANCE - abs(distVec.x);
+	float xdist = abs(distVec.x);
+	float ydist = abs(distVec.y);
+
+	if (xdist > MIN_DISTANCE) { return false; }
+	if (ydist > MIN_DISTANCE) { return false; }
+
+	if (xdist <= TILE_HALF) { return true; }
+	if (ydist <= TILE_HALF) { return true; }
+
+	double corner_dist_squared = pow(xdist - TILE_HALF, 2) +
+		pow(ydist - TILE_HALF, 2);
+
+	return corner_dist_squared <= 0.0625;
+
+	/*float xdepth = MIN_DISTANCE - abs(distVec.x);
 	float ydepth = MIN_DISTANCE - abs(distVec.y);
 
 	if (xdepth > 0 || ydepth > 0) {
 		return true;
-	}
+	}*/
 }
 
 bool Projectile::collideWithEnemy(Enemy* enemy) {

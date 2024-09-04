@@ -208,7 +208,17 @@ bool Player::update(JCEngine::InputManager& inputManager, std::vector<Projectile
 }
 
 void Player::fire(const glm::vec2& direction, const glm::vec2& position, std::vector<Projectile*>& projectiles) {
-	Projectile* energyBall = new Projectile(8.0f, direction, position, 150, JCEngine::ResourceManager::getTexture("Assets/energyball.png").id, 1);
+	b2Body* playerBody = m_collisionCapsule.getBody();
+	b2Vec2 playerVelocity = playerBody->GetLinearVelocity();
+
+	glm::vec2 fireVelocity = 8.0f * direction;
+
+	fireVelocity.x += playerVelocity.x;
+	fireVelocity.y += playerVelocity.y;
+
+	glm::vec2 fireDirection = normalize(fireVelocity);
+	float projectileSpeed = length(fireVelocity);
+	Projectile* energyBall = new Projectile(projectileSpeed, fireDirection, position + glm::vec2(0.0f, 0.5f) + (0.5f * direction), 150, JCEngine::ResourceManager::getTexture("Assets/energyball.png").id, 1);
 
 	projectiles.push_back(energyBall);
 	//_fireEffect.play();
