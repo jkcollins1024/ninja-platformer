@@ -103,17 +103,28 @@ bool Projectile::collideWithTile(glm::vec2 tilePosition) {
 }
 
 bool Projectile::collideWithEnemy(Enemy* enemy) {
+	glm::vec2 enemySize = enemy->getSize();
 	glm::vec2 currentCenter = m_position;
 	glm::vec2 otherCenter = enemy->getPosition();
 
 	glm::vec2 distVec = currentCenter - otherCenter;
 
-	float depth = glm::length(distVec);
+	float halfX = enemySize.x / 2.0f;
+	float halfY = enemySize.y / 2.0f;
 
-	if (depth <= m_radius + enemy->getHitboxRadius()) {
-		return true;
-	}
-	return false;
+	float xdist = abs(distVec.x);
+	float ydist = abs(distVec.y);
+
+	if (xdist > halfX + m_radius) { return false; }
+	if (ydist > halfY + m_radius) { return false; }
+
+	if (xdist <= halfX) { return true; }
+	if (ydist <= halfY) { return true; }
+
+	double corner_dist_squared = pow(xdist - halfX, 2) +
+		pow(ydist - halfY, 2);
+
+	return corner_dist_squared <= 0.0625;//pow(m_radius, 2);
 }
 
 //returns position to determine collision when bullet should be destroyed

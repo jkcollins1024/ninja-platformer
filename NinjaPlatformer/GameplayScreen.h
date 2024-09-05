@@ -44,7 +44,7 @@ private:
 	std::vector<Box> m_boxes;
 	Player m_player;
 	std::vector<Enemy*> m_enemies;
-	bool m_renderDebug = true;
+	bool m_renderDebug = false;
 	std::vector<std::string> m_levelData;
 	std::vector<Projectile*> m_projectiles;
 

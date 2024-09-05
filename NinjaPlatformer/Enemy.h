@@ -25,6 +25,7 @@ public:
 	//getters
 	glm::vec2 getPosition() { return m_position; };
 	float getHitboxRadius() { return m_hitboxRadius; };
+	glm::vec2 getSize() { return m_size; };
 
 protected:
 	std::vector<JCEngine::GLTexture> m_textures;
