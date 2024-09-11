@@ -8,9 +8,17 @@ Actor::~Actor() {
 }
 
 bool Actor::applyDamage(int damage) {
-	m_health -= damage;
+	m_takingDamage = true;
+	m_damageFrameCount = 0;
+	if (m_health <= 0) {
+		return true;
+	}
 
-	return m_health <= 0;
+	m_health -= damage;
+	if (m_health <= 0) {
+		m_deathFrames = 60;
+	}
+	return false;
 }
 
 //bool Actor::collideWithLevel(const std::vector<std::string>& levelData) {

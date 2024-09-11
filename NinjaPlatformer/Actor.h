@@ -33,8 +33,12 @@ protected:
 	JCEngine::ColorRGBA8 m_color;
 	ActorType m_type;
 	glm::vec2 m_directionFacing;
-	int m_frameCount;
-	int m_health;
+	int m_frameCount = 0;
+	int m_damageFrameCount = 0;
+	int m_health = 4;
+
+	bool m_takingDamage = false;
+	int m_deathFrames = -1;
 
 	void collideWithTile(glm::vec2 tilePosition);
 };

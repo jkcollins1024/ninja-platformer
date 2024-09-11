@@ -1,7 +1,7 @@
 #include "Slime.h"
 #include <JCEngine/ResourceManager.h>
 
-Slime::Slime(glm::vec2 position): Enemy(position) {
+Slime::Slime(glm::vec2 position, int currentFrame): Enemy(position, currentFrame) {
 	m_type = ActorType::ENEMY;
 	m_uv = glm::vec4(1.0f, 1.0f, -1.0f, -1.0f);
 
@@ -16,8 +16,7 @@ Slime::Slime(glm::vec2 position): Enemy(position) {
 	m_color.a = 255;
 
 	m_speed = 3.0f;
-	m_frameCount = 0;
-	m_health = 60;
+	m_health = 2;
 	m_size = glm::vec2(2.0f, 1.0f);
 
 	m_position = position + m_size / 2.0f;

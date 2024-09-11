@@ -1,7 +1,7 @@
 #include "Fly.h"
 #include <JCEngine/ResourceManager.h>
 
-Fly::Fly(glm::vec2 position) : Enemy(position) {
+Fly::Fly(glm::vec2 position, int currentFrame) : Enemy(position, currentFrame) {
 	m_type = ActorType::ENEMY;
 
 	m_textures.push_back(JCEngine::ResourceManager::getTexture("Assets/flyFly1.png"));
@@ -14,13 +14,8 @@ Fly::Fly(glm::vec2 position) : Enemy(position) {
 	m_color.b = 255;
 	m_color.a = 255;
 
-	m_speed = 3.0f;
-	m_frameCount = 0;
-	m_health = 60;
-
-	m_speed = 3.0f;
-	m_frameCount = 0;
-	m_health = 60;
+	m_speed = 5.0f;
+	m_health = 4;
 	m_size = glm::vec2(2.0f, 1.0f);
 
 	m_position = position + m_size / 2.0f;

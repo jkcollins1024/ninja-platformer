@@ -47,6 +47,7 @@ private:
 	bool m_renderDebug = false;
 	std::vector<std::string> m_levelData;
 	std::vector<Projectile*> m_projectiles;
+	float endLevel = 0.0f;
 
 	JCEngine::GLSLProgram m_textureProgram;
 	JCEngine::Camera2D m_camera;

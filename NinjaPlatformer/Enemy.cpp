@@ -7,8 +7,9 @@
 #include <SDL/SDL.h>
 #include <JCEngine\ResourceManager.h>
 
-Enemy::Enemy(glm::vec2 position) {
+Enemy::Enemy(glm::vec2 position, int currentFrame) {
 	m_position = position;
+	m_frameCount = currentFrame;
 }
 
 Enemy::~Enemy() {
@@ -16,6 +17,21 @@ Enemy::~Enemy() {
 }
 
 void Enemy::move(float deltaTime) {
+	//don't move while taking damage or dying
+	if (m_deathFrames > 0) {
+		m_deathFrames--;
+		return;
+	}
+
+	if (m_takingDamage) {
+		m_damageFrameCount++;
+		if (m_damageFrameCount > 40) {
+			m_damageFrameCount = 0;
+			m_takingDamage = false;
+		}
+		return;
+	}
+
 	if (m_frameCount == 100) {
 		m_directionFacing = -m_directionFacing;
 		m_frameCount = 0;
@@ -35,9 +51,25 @@ void Enemy::draw(JCEngine::SpriteBatch& spriteBatch) {
 	glm::vec4 positionRect(m_position.x - m_size.x / 2.0f, m_position.y - m_size.y / 2.0f, m_size.x, m_size.y);
 	GLuint textureID;
 
+	JCEngine::ColorRGBA8 color = m_color;
 	textureID = m_textures[tileIndex].id;
 
-	spriteBatch.draw(positionRect, getUV(), textureID, 0.0f, m_color, m_directionFacing);
+	if (m_deathFrames > 0) {
+		//fade out alpha
+		color.a = 255.0f * m_deathFrames / 60.0f;
+		m_deathFrames--;
+	}
+	else if (m_takingDamage) {
+		//damage animation
+		/*int side = m_damageFrameCount / 20;
+		int frame = m_damageFrameCount % 20;*/
+
+		color = JCEngine::ColorRGBA8(255, 0, 0, 255.0f * m_damageFrameCount / 10.0f);
+
+		//positionRect.a = side == 0 ? m_size.y - m_size.y * frame / 20.0f : m_size.y * frame / 20.0f;
+	}
+
+	spriteBatch.draw(positionRect, getUV(), textureID, 0.0f, color, m_directionFacing);
 }
 
 //bool Enemy::collideWithLevel(const std::vector<std::string>& levelData) {

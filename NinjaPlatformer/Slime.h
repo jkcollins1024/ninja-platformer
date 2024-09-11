@@ -5,7 +5,7 @@
 class Slime : public Enemy 
 {
 public:
-	Slime(glm::vec2 position);
+	Slime(glm::vec2 position, int currentFrame);
 	~Slime();
 
 	//virtual void draw(JCEngine::SpriteBatch& spriteBatch) override;

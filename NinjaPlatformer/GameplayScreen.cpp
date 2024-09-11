@@ -133,12 +133,12 @@ void GameplayScreen::onEntry()
 				break;
 			case 'S':
 				//slime enemies - make these actors
-				m_enemies.push_back(new Slime(glm::vec2(x * TILE_WIDTH, y * TILE_WIDTH)));// (game_world, glm::vec2(x * TILE_WIDTH, y * TILE_WIDTH), glm::vec2(TILE_WIDTH, TILE_WIDTH), JCEngine::ResourceManager::getTexture("Assets/slimeWalk1.png"), tileColor, TileType::GROUND);
+				m_enemies.push_back(new Slime(glm::vec2(x * TILE_WIDTH, y * TILE_WIDTH), x * 5 % 20 * 5));// (game_world, glm::vec2(x * TILE_WIDTH, y * TILE_WIDTH), glm::vec2(TILE_WIDTH, TILE_WIDTH), JCEngine::ResourceManager::getTexture("Assets/slimeWalk1.png"), tileColor, TileType::GROUND);
 				m_levelData[y][x] = '.';
 				break;
 			case 'F':
 				//fly enemies - make these actors
-				m_enemies.push_back(new Fly(glm::vec2(x * TILE_WIDTH, y * TILE_WIDTH))); //m_boxes.emplace_back(game_world, glm::vec2(x * TILE_WIDTH + TILE_WIDTH / 2.0f, y * TILE_WIDTH + TILE_WIDTH / 2.0f), glm::vec2(TILE_WIDTH, TILE_WIDTH), JCEngine::ResourceManager::getTexture("Assets/flyFly1.png"), tileColor, TileType::GROUND);
+				m_enemies.push_back(new Fly(glm::vec2(x * TILE_WIDTH, y * TILE_WIDTH), x % 20 * 5)); //m_boxes.emplace_back(game_world, glm::vec2(x * TILE_WIDTH + TILE_WIDTH / 2.0f, y * TILE_WIDTH + TILE_WIDTH / 2.0f), glm::vec2(TILE_WIDTH, TILE_WIDTH), JCEngine::ResourceManager::getTexture("Assets/flyFly1.png"), tileColor, TileType::GROUND);
 				m_levelData[y][x] = '.';
 				break;
 			case '.':
@@ -163,12 +163,12 @@ void GameplayScreen::onEntry()
 
 	//init camera
 	m_camera.Init(m_window->GetScreenWidth(), m_window->GetScreenHeight());
-	m_camera.SetScale(32.0f);
+	m_camera.SetScale(40.0f);
 
 	//font for debug
 	_spriteFont = new JCEngine::SpriteFont("Fonts/chintzy.ttf", 8);
 
-	m_player = Player(game_world, startPlayerPosition, glm::vec2(0.8f, 1.8f), glm::vec2(2.0f), JCEngine::ColorRGBA8(255, 255, 255, 255), &m_camera);
+	m_player = Player(game_world, startPlayerPosition, glm::vec2(0.8f, 1.8f), glm::vec2(2.0f), JCEngine::ColorRGBA8(255, 255, 255, 255), &m_camera, 12.8f, m_levelData[0].length() * TILE_WIDTH - 12.8f);
 }
 
 void GameplayScreen::onExit()
@@ -185,8 +185,19 @@ void GameplayScreen::update()
 		JCEngine::fatalError("");//dead
 	}
 
-	for (auto& enemy : m_enemies) {
-		enemy->move(timeStep);
+	/*for (auto& enemy : m_enemies) {
+		if (enemy->move(timeStep)) {
+
+		}
+	}*/
+
+	for (int i = 0; i < m_enemies.size(); i++) {
+		m_enemies[i]->move(timeStep);
+		if (m_enemies[i]->isDead()) {
+			delete m_enemies[i];
+			m_enemies[i] = m_enemies.back();
+			m_enemies.pop_back();
+		}
 	}
 
 	for (int i = 0; i < m_projectiles.size(); i++) {
@@ -204,13 +215,14 @@ void GameplayScreen::update()
 		for (int j = 0; j < m_enemies.size();) {
 			Enemy* enemy = m_enemies[j];
 
-			if (m_projectiles[i]->collideWithEnemy(enemy)) {
+			if (m_projectiles[i]->collideWithEnemy(enemy) && !enemy->applyDamage(m_projectiles[i]->getDamage())) {
 				//addDebris(glm::vec2(asteroid->getBody()->GetPosition().x, asteroid->getBody()->GetPosition().y), 100);
 
 				//destroy asteroid here
-				delete enemy;
+				/*delete enemy;
 				m_enemies[j] = m_enemies.back();
-				m_enemies.pop_back();
+				m_enemies.pop_back();*/
+				//enemy->applyDamage(m_projectiles[i]->getDamage());
 
 				m_projectiles[i] = m_projectiles.back();
 				m_projectiles.pop_back();
@@ -232,7 +244,7 @@ void GameplayScreen::update()
 void GameplayScreen::draw()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glClearColor(0.408, 0.706, 0.949f, 1.0f);
 
 	m_textureProgram.use();
 

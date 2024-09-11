@@ -12,7 +12,7 @@
 class Enemy : public Actor
 {
 public:
-	Enemy(glm::vec2 position);
+	Enemy(glm::vec2 position, int currentFrame);
 	~Enemy();
 
 	virtual void move(float deltaTime) override;
@@ -26,6 +26,8 @@ public:
 	glm::vec2 getPosition() { return m_position; };
 	float getHitboxRadius() { return m_hitboxRadius; };
 	glm::vec2 getSize() { return m_size; };
+
+	bool isDead() { return m_deathFrames == 0; }
 
 protected:
 	std::vector<JCEngine::GLTexture> m_textures;

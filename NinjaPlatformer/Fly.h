@@ -5,7 +5,7 @@
 class Fly : public Enemy
 {
 public:
-	Fly(glm::vec2 position);
+	Fly(glm::vec2 position, int currentFrame);
 	~Fly();
 
 	//virtual void draw(JCEngine::SpriteBatch& spriteBatch) override;

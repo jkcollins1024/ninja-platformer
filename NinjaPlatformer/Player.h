@@ -20,7 +20,8 @@ class Player : public Actor
 {
 public:
 	Player() {}
-	Player(b2World* world, const glm::vec2& position, const glm::vec2& collisionDimensions, const glm::vec2& drawDimensions, JCEngine::ColorRGBA8 color, JCEngine::Camera2D* camera);
+	Player(b2World* world, const glm::vec2& position, const glm::vec2& collisionDimensions, const glm::vec2& drawDimensions,
+		JCEngine::ColorRGBA8 color, JCEngine::Camera2D* camera, float minCameraX, float maxCameraX);
 	~Player();
 
 	void draw(JCEngine::SpriteBatch& spriteBatch);
@@ -41,5 +42,8 @@ private:
 	JCEngine::Camera2D* m_camera;
 	int m_fireRate = 30;
 	int m_frameCount;
+
+	float m_minCameraX = 0.0f;
+	float m_maxCameraX = 0.0f;
 };
 

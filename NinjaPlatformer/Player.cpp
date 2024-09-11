@@ -5,21 +5,28 @@
 #include <SDL\SDL.h>
 
 
-Player::Player(b2World* world, const glm::vec2& position, const glm::vec2& collisionDimensions, const glm::vec2& drawDimensions, JCEngine::ColorRGBA8 color, JCEngine::Camera2D* camera)
+Player::Player(b2World* world, const glm::vec2& position, const glm::vec2& collisionDimensions, const glm::vec2& drawDimensions,
+		JCEngine::ColorRGBA8 color, JCEngine::Camera2D* camera, float minCameraX, float maxCameraX)
 {
 	//load texture
 	//JCEngine::GLTexture playerTexture = JCEngine::ResourceManager::getTexture("Assets/blue_ninja.png");
 	//m_collisionBox = Box(world, position, dimensions, playerTexture, color, true, glm::vec4(0.0f, 0.0f, 0.1f, 0.5f));
 
-	m_collisionCapsule.init(world, position, collisionDimensions, 1.0f, 0.1f, true);
+	m_collisionCapsule.init(world, position, collisionDimensions, 1.0f, 0.0f, true);
 	JCEngine::GLTexture texture = JCEngine::ResourceManager::getTexture("Assets/blue_ninja.png");
 	m_color = color;
 	m_drawDimensions = drawDimensions;
 	m_textureSheet.init(texture, glm::ivec2(10, 2));
 	m_camera = camera;
+	m_minCameraX = minCameraX;
+	m_maxCameraX = maxCameraX;
 
 	b2Body* playerBody = m_collisionCapsule.getBody();
-	m_camera->SetPosition(glm::vec2(playerBody->GetPosition().x, playerBody->GetPosition().y));
+
+	float cameraX = playerBody->GetPosition().x;
+	cameraX = std::max(cameraX, m_minCameraX);
+	cameraX = std::min(cameraX, m_maxCameraX);
+	m_camera->SetPosition(glm::vec2(cameraX, playerBody->GetPosition().y));
 }
 
 Player::~Player()
@@ -151,7 +158,7 @@ bool Player::update(JCEngine::InputManager& inputManager, std::vector<Projectile
 	}
 	
 	m_frameCount += 1;
-	if (inputManager.isKeyPressed(SDL_BUTTON_LEFT) && m_frameCount >= m_fireRate) {
+	if (inputManager.isKeyPressed(SDLK_p) && m_frameCount >= m_fireRate) {
 		m_punching = true;
 		//throw projectile
 	
@@ -202,7 +209,11 @@ bool Player::update(JCEngine::InputManager& inputManager, std::vector<Projectile
 		}
 	}
 
-	m_camera->SetPosition(glm::vec2(playerBody->GetPosition().x, playerBody->GetPosition().y));
+	float cameraX = playerBody->GetPosition().x;
+	cameraX = std::max(cameraX, m_minCameraX);
+	cameraX = std::min(cameraX, m_maxCameraX);
+
+	m_camera->SetPosition(glm::vec2(cameraX, playerBody->GetPosition().y));
 
 	return false;
 }
@@ -218,7 +229,7 @@ void Player::fire(const glm::vec2& direction, const glm::vec2& position, std::ve
 
 	glm::vec2 fireDirection = normalize(fireVelocity);
 	float projectileSpeed = length(fireVelocity);
-	Projectile* energyBall = new Projectile(projectileSpeed, fireDirection, position + glm::vec2(0.0f, 0.5f) + (0.5f * direction), 150, JCEngine::ResourceManager::getTexture("Assets/energyball.png").id, 1);
+	Projectile* energyBall = new Projectile(8.0f + abs(playerVelocity.x), direction, position + glm::vec2(0.0f, 0.5f) + (0.5f * direction), 150, JCEngine::ResourceManager::getTexture("Assets/energyball.png").id, 1);
 
 	projectiles.push_back(energyBall);
 	//_fireEffect.play();
